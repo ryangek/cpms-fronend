@@ -1,0 +1,231 @@
+<body>
+  <!--ภาพสถานที่-->
+    <img [src]="_DomSanitizer.bypassSecurityTrustUrl(img)" id="map" draggable="false" alt="">
+  <!--ภาพสถานที่-->
+
+  <!--ปุ่มจัดการอุปกรณ์-->
+    <div class="bot-left">
+      <div class="btn-group btn-group-sm">
+        <button data-toggle="tooltip" id="reset_all" (click)="onChangeLocation('')" data-placement="top" title="กลับ" type="button" class="btn btn-primary">
+          กลับไปยังตาราง
+        </button >
+      </div>
+    </div>
+  <!--ปุ่มจัดการอุปกรณ์-->
+
+  <!--อุปกรณ์-->
+    <span *ngFor="let d of dropData | async; let x = index"
+        class="glyphicon glyphicon-map-marker dragme {{ d.device_ultra }}"
+        draggable="false"
+        id="{{ d.device_name }}"
+        [ngStyle]="{top: d.device_top + '%' , left: d.device_left + '%'}"
+        [attr.data-item]="x">
+      <b>&nbsp;{{ d.device_name }}</b>
+    </span>
+  <!--อุปกรณ์-->
+
+<!--Modal Alert ฟอร์มจัดการสถานที่-->
+  <div id="myModals" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" style="margin-top: 2.5%">
+      <div class="card modal-content">
+        <div class="card-header modal-header" data-background-color="blue">
+          <h4 class="title">
+            <i class="material-icons" style="color:white; padding: 7.5px">location_on</i>จัดการสถานที่
+            <i class="material-icons pull-right close" style="color:white; padding: 7.5px" data-dismiss="modal">power_settings_new</i>
+          </h4>
+        </div>
+        <div class="card-content modal-body">
+          <div class="row">
+            <form action="javascript:void(0)" (submit)="addLocate($event)">
+              <div class="card card-stats" style="margin-bottom: 0">
+                <div class="card-header col-md-4">
+                  <input type="hidden" name="locate_image" #locateImage>
+                  <input type="file"
+                         accept="image/*"
+                         (change)="onChangeImg($event)"
+                         style="display: none;"
+                         #fileInput
+                         name="fileInput">
+                  <img (click)="onClickUpload()" src="assets/img/profile.jpg" width="100%" #imgView>
+                </div>
+                <div class="card-content">
+                  <div class="form-inline">
+                    <div class="form-group label-floating">
+                      <label class="control-label">ชื่อสถานที่</label>
+                      <input type="text" class="form-control" id="locate_name" required>
+                    </div>
+                    <div class="form-group label-floating">
+                      <label class="control-label">ชั้นที่</label>
+                      <input type="number" class="form-control" id="locate_floor" required>
+                    </div>
+                    <button type="submit" id="submit" class="btn btn-sm btn-success">
+                      <i class="material-icons">check_circle</i>
+                    </button>
+                    <button type="reset" id="reset" (click)="onClear()" class="btn btn-sm btn-danger">
+                      <i class="material-icons">remove_circle</i>
+                    </button>
+                  </div>
+                  <br>
+                  <div id="alert" *ngIf="error.locate_name||error.locate_floor||error.locate_image" class="alert alert-danger">
+                    Please select image !<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  </div>
+                </div>
+                <div class="card-footer col-md-7" style="margin-bottom: 0">
+                  <div class="stats">
+                    <div class="col-md-6" *ngFor="let l of location | async">
+                      <div class="panel panel-default">
+                        <div class="panel-heading" style="padding: 0">
+                          <img width="100%" height="256px"
+                          src="{{ url + l.locate_id + '.jpg' }}">
+                        </div>
+                        <div class="panel-body">
+                          <h4>{{ l.locate_name }}
+                          </h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--Modal Alert ฟอร์มจัดการสถานที่-->
+
+<!--Modal Alert ฟอร์มจัดการสถานที่-->
+  <div id="myModals" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" style="margin-top: 2.5%">
+      <div class="card modal-content">
+        <div class="card-header modal-header" data-background-color="blue">
+          <h4 class="title">
+            <i class="material-icons" style="color:white; padding: 7.5px">location_on</i>เลือกสถานที่
+            <i class="material-icons pull-right close" style="color:white; padding: 7.5px" data-dismiss="modal">power_settings_new</i>
+          </h4>
+        </div>
+        <div class="card-content modal-body">
+          <div class="row">
+            <form action="javascript:void(0)" (submit)="addLocate($event)">
+              <div class="card card-stats" style="margin-bottom: 0">
+                <div class="card-footer col-md-7" style="margin-bottom: 0">
+                  <div class="stats">
+                    <div class="col-md-6" *ngFor="let l of location | async">
+                      <div class="panel panel-default">
+                        <div class="panel-heading" style="padding: 0">
+                          <img width="100%" height="256px"
+                          (click)="onChangeLocation(l.locate_id)"
+                          src="{{ url + l.locate_id + '.jpg' }}"
+                          data-dismiss="modal">
+                        </div>
+                        <div class="panel-body">
+                          <h4>{{ l.locate_name }}</h4>
+                        </div>
+                        <div class="panel-footer col-md-12 text-center">
+                          <div class="btn-group btn-group-sm">
+                            <button data-toggle="tooltip"
+                                    data-placement="top"
+                                    data-dismiss="modal"
+                                    title="มีจำนวน {{ l.locate_quantity }} อุปกรณ์"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    (click)="onChangeLocation(l.locate_id)">
+                              <i class="fa fa-search"></i>
+                            </button >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--Modal Alert ฟอร์มจัดการสถานที่-->
+
+
+<div class="container-fluid" style="padding-top: 75px">
+    <div class="row">
+        <div class="col-lg-12 col-md-12" id="table_locate">
+            <div class="card card-nav-tabs" >
+              <div class="card-header" data-background-color="red">
+                <div class="nav-tabs-navigation">
+                  <div class="nav-tabs-wrapper">
+                    <span class="nav-tabs-title">จัดการ:</span>
+                    <ul class="nav nav-tabs" data-tabs="tabs">
+                      <li class="active">
+                        <a href="#profile" data-toggle="tab">
+                          <i class="material-icons">location_on</i>
+                          สถานที่
+                          <div class="ripple-container"></div></a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0)" data-background-color="blue" data-toggle="modal"
+                        data-target="#myModals" (click)="addToolTip()">
+                            <i class="fa fa-plus"></i>
+                            เพิ่มสถานที่
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-content">
+                <div class="tab-content">
+                  <div class="tab-pane active" id="profile">
+                    <table class="table" *ngIf="location">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>ชื่อสถานที่</th>
+                          <th>ทั้งหมด</th>
+                          <th>ว่าง</th>
+                          <th>จัดการ</th>
+                        </tr>
+                      </thead>
+                      <tbody style="height: calc(100vh - 324px); overflow-x: hidden; overflow-y: auto;">
+                      <tr *ngFor="let l of location | async">
+                        <td>
+                          <div class="checkbox">
+                            <label>
+                                <h4><i class="material-icons" style="color:green">check_circle</i></h4>
+                            </label>
+                          </div>
+                        </td>
+                        <td><h4>{{ l.locate_name }}</h4></td>
+                        <td>
+                            <h4 style="color:blue"><i class="material-icons">info_outline</i> {{ l.locate_quantity }}</h4>
+                        </td>
+                        <td>
+                            <h4 style="color:green"><i class="material-icons">check_circle</i> {{ l.locate_quantity }}</h4>
+                        </td>
+                        <td class="td-actions text-right">
+                            <button type="button" rel="tooltip" title="Show" (click)="onChangeLocation(l.locate_id)" class="btn btn-primary btn-sm">
+                               <h6><i class="material-icons">search</i> แสดงสถานะ</h6>
+                            </button>
+                            &nbsp;
+                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-sm" (click)="onDelete(l.locate_id)"> <!--(click)="onDelete(l.locate_id)"-->
+                                <h6><i class="fa fa-trash"></i> ลบ</h6>
+                            </button>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+
+
+</body>
