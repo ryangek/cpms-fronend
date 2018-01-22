@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
 
   constructor() {
-    const urls = ['/backend/', '//localhost/backend/', 'http://phufa-public.ddns.net:1234/', 'http://api.upcarpark.xyz/'];
-    localStorage.setItem('isUrl', urls[0]);
+    const urls = ['/backend/', '//localhost/backend_test/', 'http://phufa-public.ddns.net:1234/', 'http://api.upcarpark.xyz/'];
+    localStorage.setItem('isUrl', urls[1]);
   }
 }

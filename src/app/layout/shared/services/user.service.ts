@@ -67,9 +67,23 @@ export class UserService {
     });
   }
 
+  /**
+  *  Action Update
+  */
+  update(data, id): Observable<any> {
+    return this.http.post(localStorage.getItem('isUrl') + 'api/user/update/' + id, data, this.options)
+        .map(
+          (res: Response) => {
+            let index = this.user.findIndex((i) => (i.id == id));
+            this.user[index] = res.json().user;
+          return res.json();
+        });
+  }
+
+
   /*
-    * Action Delete
-    */
+  * Action Delete
+  */
   delete(id) {
     const index = this.user.findIndex(i => i.id === id);
     if (index !== -1) {

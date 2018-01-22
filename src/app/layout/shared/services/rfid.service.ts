@@ -5,6 +5,8 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Observable';
 // import the important
 
+import * as io from 'socket.io-client';
+
 // Observable class extensions
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
@@ -17,11 +19,18 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
+
+
+declare const $: any;
+
 @Injectable()
 export class RfidService {
+  private url = 'http://localhost:3000';
+  private socket;
 
   rfid: Rfid[];
   rfid_all: Rfid[];
+  rfid_check: Rfid[];
 
   headers: Headers;
   options: RequestOptions;
@@ -34,6 +43,9 @@ export class RfidService {
     this.options = new RequestOptions({ headers: this.headers });
     this.showRfid().subscribe(res => {this.rfid = res;});
     this.showRfidAll().subscribe(res => {this.rfid_all = res;});
+    // this.rfid = [];
+    // this.rfid_all = [];
+    this.rfid_check = [];
   }
 
   /*
@@ -60,9 +72,6 @@ export class RfidService {
   showRfidObserv(): Observable<Rfid[]> {
     return new Observable<Rfid[]>((observer) => {
       observer.next(this.rfid);
-      setInterval( () => {
-        observer.next(this.rfid);
-      }, 200);
     });
   }
   showRfidAllObserve(): Observable<Rfid[]> {
@@ -82,10 +91,44 @@ export class RfidService {
   showRfidAllObserv(): Observable<Rfid[]> {
     return new Observable<Rfid[]>((observer) => {
       observer.next(this.rfid_all);
-      setInterval( () => {
-        observer.next(this.rfid_all);
-      }, 200);
     });
+  }
+  getRfidUrl(): any {
+    this.http.get(localStorage.getItem('isUrl') + 'api/rfid/fire/data', this.options)
+      .subscribe(res => {});
+  }
+  getRfid(): any {
+    let observable = new Observable(observer => {
+      this.socket = io(this.url);
+      this.socket.on('rfid-channel:App\\Events\\EventRfid', (msg) => {
+        this.rfid_check = msg.data.rfid;
+        setTimeout(() => {
+          if (this.rfid_all.length <= this.rfid_check.length) {
+            if (this.rfid_check.length > 0) {
+              for(let i=0; i<this.rfid_check.length; i++) {
+                let find = this.rfid_check[i].rfid;
+                if (this.rfid_all.findIndex((i) => (i.rfid == find)) == -1) {
+                  setTimeout(() => {
+                     this.showNotification('top', 'right', 'ได้เพิ่มข้อมูลบัตร: ' + this.rfid_check[i].rfid_data + ' เรียบร้อยแล้ว');
+                  }, 1000);
+                }
+              }
+            }
+            this.rfid_all = this.rfid_check;
+            this.rfid = [];
+            for (var i = this.rfid_all.length - 1; i >= 0; i--) {
+              if (this.rfid_all[i].rfid_user == null)
+                this.rfid.push(this.rfid_all[i]);
+            }
+          }
+          observer.next(msg.data);
+        }, 200);
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    })
+    return observable;
   }
 
   showRfid(): Observable<Rfid[]> {
@@ -104,6 +147,7 @@ export class RfidService {
           const indexx = this.rfid_all.findIndex(i => i.rfid === id);
           if (indexx !== -1) {
             this.rfid_all.splice(indexx, 1);
+            this.getRfidUrl();
             return true;
           }
         },
@@ -114,4 +158,23 @@ export class RfidService {
     }
     return false;
   }
+
+  showNotification(from, align, msg){
+      const type = ['','info','success','warning','danger'];
+
+      const color = Math.floor((Math.random() * 4) + 1);
+
+      $.notify({
+          icon: "notifications",
+          message: '<b>' + msg + '</b>'
+          //"Welcome to <b>Material Dashboard</b> - a beautiful freebie for every web developer."
+      },{
+          type: type[2],
+          timer: 3000,
+          placement: {
+              from: from,
+              align: align
+          }
+      });
+    }
 }

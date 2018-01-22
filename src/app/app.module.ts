@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthGuard } from './layout/shared/guard/auth.guard';
 import { HttpModule } from '@angular/http';
 
+
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
 

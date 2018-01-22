@@ -1,32 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as Chartist from 'chartist';
 
-import { History, HistoryService, Rfid, RfidService, Location, LocationService } from '../shared';
+import { HistoryService} from '../shared';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+export class HomeComponent implements OnInit, OnDestroy {
 
 
+    connection;
 
-export class HomeComponent implements OnInit {
-
-  rfid: Observable<Rfid[]>;
-  //history: Observable<History[]>;
-  location: Observable<Location[]>;
-
-  constructor(private rfidService: RfidService,
-              private locationService: LocationService,
-              private historyService: HistoryService) { }
+  constructor(private historyService: HistoryService) {
+  }
 
   ngOnInit() {
       
       this.onChange({target:{value: "Daily"}});
-      this.rfid = this.rfidService.showRfidAllObserv();
-      this.location = this.locationService.showObserv();
+
+      this.connection = this.historyService.getHistory().subscribe( data => {
+        console.log(data);
+      });
+
+  }
+
+  ngOnDestroy() {
+    this.connection.unsubscribe();
   }
 
   onChange(e) {
@@ -70,7 +72,7 @@ export class HomeComponent implements OnInit {
         chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
     }
 
-    var dailySalesChart = new Chartist.Line('#DailyChart', dataDailySalesChart, optionsDailySalesChart);
+    var dailySalesChart = new Chartist.Bar('#DailyChart', dataDailySalesChart, optionsDailySalesChart);
 
   }
 

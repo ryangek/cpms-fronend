@@ -1,5 +1,7 @@
 export class User {
   id: number;
+  rfid: number;
+  rfid_data: string;
   name: string;
   username: string;
   email: string;

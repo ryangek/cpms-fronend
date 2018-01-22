@@ -5,6 +5,8 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Observable';
 // import the important
 
+import * as io from 'socket.io-client';
+
 // Observable class extensions
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
@@ -19,6 +21,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 @Injectable()
 export class HistoryService {
+  private url = 'http://localhost:3000';
+  private socket;
 
   history: History[];
 
@@ -48,6 +52,24 @@ export class HistoryService {
 
   showHistory(data): Observable<History[]> {
       return this.http.get(localStorage.getItem('isUrl') + 'api/history/' + data + '/v1', this.options).map((res: Response) => this.history = res.json().data);
+  }
+
+  getHistoryUrl(): any {
+    this.http.get(localStorage.getItem('isUrl') + 'api/history/fire/data', this.options).map((res: Response) => res.json());
+  }
+
+  getHistory(): any {
+    let observable = new Observable(observer => {
+      this.socket = io(this.url);
+      this.socket.on('history-channel:App\\Events\\EventHistory', (msg) => {
+        observer.next(msg.data);
+        console.log(msg.data);
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    })
+    return observable;
   }
 
 }

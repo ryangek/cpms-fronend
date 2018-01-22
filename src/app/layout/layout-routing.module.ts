@@ -10,6 +10,8 @@ const routes: Routes = [
       {path: 'maps', loadChildren: './map/map.module#MapModule'},
       {path: 'map-view', loadChildren: './map-view/map-view.module#MapViewModule'},
       {path: 'user', loadChildren: './user/user.module#UserModule'},
+      {path: 'rfid', loadChildren: './rfid/rfid.module#RfidModule'},
+      {path: 'history', loadChildren: './history/history.module#HistoryModule'},
     ],
   }
 ];

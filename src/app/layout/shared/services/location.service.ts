@@ -47,6 +47,18 @@ export class LocationService {
       );
   }
 
+  showQuantity(): Observable<number> {
+    return new Observable<number> (
+      subscriber => {
+        var num = 0;
+        for(let i=0; i<this.location.length; i++) {
+          num+=this.location[i].locate_quantity;
+        }
+        subscriber.next(num);
+      }
+    );
+  }
+
   showObserv(): Observable<Location[]> {
     return new Observable<Location[]>(
       subscriber => {

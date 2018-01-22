@@ -8,6 +8,8 @@ import { ComponentsModule } from '../components/components.module';
 import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
 
+import { RfidService } from './shared';
+
 @NgModule({
   imports: [
     FormsModule,
@@ -18,6 +20,7 @@ import { LayoutComponent } from './layout.component';
   ],
   declarations: [
     LayoutComponent,
-  ]
+  ],
+  providers: [RfidService]
 })
 export class LayoutModule { }

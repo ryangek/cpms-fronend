@@ -15,11 +15,8 @@ export const ROUTES: RouteInfo[] = [
     { path: '/map-view', title: 'จัดการสถานที่',  icon:'pageview', class: '', id: 'map-view' },
     { path: '/maps', title: 'จัดตำแหน่งอุปกรณ์',  icon:'location_on', class: '', id: 'maps' },
     { path: '/user', title: 'สมาชิก',  icon:'person', class: '', id: 'user' },
-    /*{ path: '/user-profile', title: 'User Profile',  icon:'person', class: '', id: 'user-profile' },
-    { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '', id: 'table-list' },
-    { path: '/typography', title: 'Typography',  icon:'library_books', class: '', id: 'typography' },
-    { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '', id: 'icons' },
-    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', id: 'notifications' },*/
+    { path: '/rfid', title: 'บัตร',  icon:'credit_card', class: '', id: 'rfid' },
+    { path: '/history', title: 'ประวัติการเข้าใช้งาน',  icon:'history', class: '', id: 'history' },
 ];
 
 @Component({
@@ -36,7 +33,7 @@ export class SidebarComponent implements OnInit {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     /*var titlee = this.location.prepareExternalUrl(this.location.path());
     setTimeout(function () {
-      if (titlee == '/') { 
+      if (titlee == '/') {
           const btn = <HTMLElement>document.getElementById('dashboard');
           btn.click();
       }

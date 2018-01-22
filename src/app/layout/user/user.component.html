@@ -1,56 +1,49 @@
 <div class="main-content">
 	<div class="container-fluid">
-		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#userModal">เพิ่มสมาชิก</button>
-		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rfidModal">อาร์เอฟไอดี</button>
-
 		<div id="userModal" class="modal fade" role="dialog">
-		    <div class="modal-dialog">
+		    <div class="modal-dialog" style="margin-top: 1em;">
 		        <div class="card modal-content">
 		        	<div class="card-header modal-header" data-background-color="blue">
 		        		<h4 class="title">
-		        			<i class="material-icons" style="color:white; padding: 7.5px">account_box</i>เพิ่มสมาชิก
+		        			<i class="material-icons" style="color:white; padding: 7.5px">account_box</i>{{modal_title}}
 		        			<i class="material-icons pull-right close" style="color:white; padding: 7.5px" data-dismiss="modal" id="exit_form">power_settings_new</i>
 		        		</h4>
 		          	</div>
 		          	<div class="card-content modal-body">
 		          		<div class="row">
-		                	<div class="col-md-8 col-md-offset-2">
-                        <div class="alert alert-success" *ngIf="success">
-                          <strong>เสร็จสิ้น !</strong> เพิ่มสมาชิกเรียบร้อยแล้ว.
-                        </div>
-                        <div class="alert alert-danger" *ngIf="emailAlready">
-                          <strong>ล้มเหลว !</strong> อีเมลล์ ถูกใช้แล้วกรุณาให้ อีเมลล์ อื่น.
-                        </div>
-		                    	<form (submit)="toSaveUser($event)">
-			                        <div class="form-group label-floating">
+		                	<div class="col-md-10 col-md-offset-1">
+		                    	<form class="form-horizontal" (submit)="toSaveUser($event)">
+			                        <div class="form-group">
 			                            <label class="control-label">ชื่อ - นามสกุล</label>
-			                            <input type="text" id="name" class="form-control" required>
+			                            <input type="text" id="name" name="name" value="{{user_id.name}}" class="form-control" required>
 			                        </div>
-			                        <div class="form-group label-floating">
+			                        <div class="form-group">
 			                            <label class="control-label">อีเมล์</label>
-			                            <input type="email" id="email" class="form-control" required>
+			                            <input type="email" id="email" name="email" value="{{user_id.email}}" class="form-control" required>
 			                        </div>
-                              <div class="form-group label-floating">
+                              <div class="form-group">
                                 <label class="control-label">ชื่อผู้ใช้</label>
-                                <input type="text" id="username" class="form-control" required>
+                                <input type="text" id="username" name="username" value="{{user_id.username}}" class="form-control" required>
                               </div>
-			                        <div class="form-group label-floating">
+			                        <div class="form-group password">
 			                            <label class="control-label">รหัสผ่าน</label>
-			                            <input type="password" id="password" class="form-control" required>
+			                            <input type="password" name="password" id="password" class="form-control" required>
 			                        </div>
-			                        <div class="form-group label-floating">
-			                            <select class="form-control" id="rfid" required>
-                                    <option value="">กรุณาเลือกอาร์เอฟไอดี</option>
-                                    <option *ngFor="let item of rfid | async" value="{{ item.rfid }}">{{ item.rfid_data }}</option>
-			                            </select>
+			                        <div class="form-group">
+                                  <label class="control-label">บัตร</label>
+			                            <select class="form-control" name="rfid" id="rfid" value="{{user_id.rfid}}" required>
+                                    <option value="">กรุณาเลือกบัตร</option>
+                                    <option *ngIf="modal_state === 'edit'" value="{{user_id.rfid}}">{{user_id.rfid_data}}</option>
+                                    <option *ngFor="let item of rfid" value="{{ item.rfid }}">{{ item.rfid_data }}</option>
+                                  </select>
 			                        </div>
-                              <div class="form-group label-floating">
+                              <div class="form-group">
                                 <label class="control-label">ทะเบียนรถ</label>
-                                <input type="text" id="license" class="form-control" required>
+                                <input type="text" id="license" name="license" value="{{ user_id.license }}" class="form-control" required>
                               </div>
-                              <div class="form-group label-floating">
+                              <div class="form-group">
                                 <label class="control-label">ที่อยู่</label>
-                                <input type="text" id="address" class="form-control" required>
+                                <input type="text" id="address" name="address" value="{{ user_id.address_data }}" class="form-control" required>
                               </div>
 			                        <div class="text-center">
 			                        	<button type="submit" class="btn btn-success">ยืนยัน</button>
@@ -64,56 +57,15 @@
 		    </div>
 		</div>
 
-    <div id="rfidModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="card modal-content">
-          <div class="card-header modal-header" data-background-color="purple">
-            <h4 class="title">
-              <i class="material-icons" style="color:white; padding: 7.5px">account_box</i>จัดการอาร์เอฟไอดี&nbsp;<button class="btn btn-sm btn-link">คลิกเพื่อแสกนอาร์เอฟไอดี</button>
-              <i class="material-icons pull-right close" style="color:white; padding: 7.5px" data-dismiss="modal">power_settings_new</i>
-            </h4>
-          </div>
-          <div class="card-content modal-body">
-            <div class="row">
-              <div class="col-md-10 col-md-offset-1">
-                <table class="table">
-                  <thead class="text-danger">
-                  <tr>
-                    <th>รหัส</th>
-                    <th>ข้อมูล</th>
-                    <th>วันที่สร้าง</th>
-                    <th>วันที่แก้ไขล่าสุด</th>
-                    <th>#</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr *ngFor="let use of rfid_all | async">
-                    <td>{{ use.rfid }}</td>
-                    <td>{{ use.rfid_data }}</td>
-                    <td>{{ use.created_at }}</td>
-                    <td>{{ use.updated_at }}</td>
-                    <td>
-                      <button class="btn btn-sm btn-danger" (click)="OnDelete(use.rfid)">ลบ</button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
 		<div class="card">
       <div class="card-header" data-background-color="red">
-        <h4 class="title">ตารางข้อมูลสมาชิก</h4>
+        <h4 class="title"><i class="material-icons" style="color:white; padding: 7.5px">account_box</i>
+          ตารางข้อมูลสมาชิก&nbsp;
+          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" (click)="modalToggle('add')" data-target="#userModal">เพิ่มข้อมูลสมาชิก</button>
+        </h4>
       </div>
-      <div class="card-content table-responsive">
-        <div class="alert alert-success" *ngIf="success_delete">
-          <strong>เสร็จสิ้น !</strong> ลบสมาชิกเรียบร้อยแล้ว.
-        </div>
-        <table class="table">
+      <div class="card-content">
+        <table class="table row-border hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
           <thead class="text-danger">
           <tr>
             <th>รหัส</th>
@@ -125,7 +77,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let use of user | async">
+          <tr *ngFor="let use of user">
             <td>{{ use.id }}</td>
             <td>{{ use.name }}</td>
             <td>{{ use.email }}</td>
@@ -133,8 +85,12 @@
             <td>{{ use.updated_at }}</td>
             <td>
               <div class="button-group">
-                <button type="button" class="btn btn-danger" (click)="destroy(use.id)">ลบ</button>
-                <button type="button" class="btn btn-warning" (click)="edit(use.id)">แก้ไข</button>
+                <a style="cursor: pointer; color: red" (click)="destroy(use.id)">
+                  <i class="material-icons">delete_forever</i>
+                </a>
+                <a style="cursor: pointer; color: orange" data-toggle="modal" data-target="#userModal" (click)="OnEdit(use.id);modalToggle('edit')">
+                  <i class="material-icons">border_color</i>
+                </a>
               </div>
             </td>
           </tr>

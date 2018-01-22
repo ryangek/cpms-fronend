@@ -22,10 +22,12 @@ export class LayoutComponent implements OnInit {
 
     @ViewChild(NavbarComponent) navbar: NavbarComponent;
 
-    constructor( public location: Location, private router: Router) { }
+    constructor( public location: Location, 
+                 private router: Router) {
+    }
 
     ngOnInit() {
-
+        
         this.listTitles = ROUTES.filter(listTitle => listTitle);
         var titlee = this.getTitle();
         setTimeout(function () {
@@ -112,5 +114,6 @@ export class LayoutComponent implements OnInit {
       }
       return 'dashboard';
     }
+
 }
 

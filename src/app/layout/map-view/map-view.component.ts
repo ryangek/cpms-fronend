@@ -140,7 +140,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
   onDelete(id) {
     if (confirm("ต้องการลบข้อมูลสถานที่นี่หรือไม่?")) {
       if (this.locationService.delete(id)) {
-        this.locationService.show(); // this.location = this.locationService.showObserv();
+        this.locationService.show().subscribe(); // this.location = this.locationService.showObserv();
       } else {
         console.log('Can\'t delete : ', id);
       }

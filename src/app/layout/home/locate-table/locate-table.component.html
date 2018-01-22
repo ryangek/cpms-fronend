@@ -1,0 +1,31 @@
+<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+<thead>
+  <tr>
+    <th>สถานะ</th>
+    <th>ลำดับ</th>
+    <th>ชื่อสถานที่</th>
+    <th>จำนวนทั้งหมด/ว่าง</th>
+  </tr>
+</thead>
+<tbody>
+  <tr *ngFor="let loc of local">
+    <td>
+      <div class="checkbox">
+        <label>
+            <i class="material-icons" style="color:green">check_circle</i>
+        </label>
+      </div>
+    </td>
+    <td>{{ i }}</td>
+    <td>{{ loc.locate_name }}</td>
+    <td>
+      <button type="button" rel="tooltip" title="Edit Task" class="btn btn-success btn-simple btn-xs">
+        <i class="material-icons">check_circle</i> ว่าง {{ loc.locate_quantity }}
+      </button>
+      <button type="button" rel="tooltip" title="Remove" class="btn btn-primary btn-simple btn-xs">
+        <i class="material-icons">info_outline</i> ทั้งหมด {{ loc.locate_quantity }}
+      </button>
+    </td>
+  </tr>
+</tbody>
+</table>

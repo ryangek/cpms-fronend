@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-md-12">
+    <button href="javascript:void(0)" (click)="changeData(0)" id="rfid-use" class="btn btn-default">ถูกใช้แล้ว</button>
+    <button href="javascript:void(0)" (click)="changeData(1)" id="rfid-not" class="btn btn-default">ยังไม่ถูกใช้</button>
+  </div>
+  <div class="col-md-12">
+    <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+      <thead>
+        <tr>
+          <th>ลำดับ</th>
+          <th>สถานะ</th>
+          <th>ข้อมูล</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let r of rfid_selected; let i = index">
+        <td>{{ i+1 }}</td>
+        <td>
+          <div class="checkbox">
+            <label>
+              <button type="button" disabled="true" class="btn btn-sm btn-success" *ngIf="r.rfid_user == null"><b><span class="material-icons" style="color:green">check_circle</span>&nbsp;ยังไม่ถูกใช้งาน</b></button>
+              <button type="button" disabled="true" class="btn btn-sm btn-danger" *ngIf="r.rfid_user != null"><b>{{ r.rfid_user }}</b></button>
+            </label>
+          </div>
+        </td>
+        <td>{{ r.rfid_data }}</td>
+      </tr>
+      </tbody>
+    </table> 
+  </div>
+</div>

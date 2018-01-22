@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-              <div class="col-lg-6 col-md-12">
+              <div class="col-lg-12 col-md-12">
                 <div class="card card-nav-tabs" >
                   <div class="card-header" data-background-color="purple">
                     <div class="nav-tabs-navigation">
@@ -108,53 +108,22 @@
                   <div class="card-content">
                     <div class="tab-content">
                       <div class="tab-pane active" id="profile">
-                        <table class="table" *ngIf="location">
-                          <tbody>
-                          <tr *ngFor="let l of location | async">
-                            <td>
-                              <div class="checkbox">
-                                <label>
-                                    <i class="material-icons" style="color:green">check_circle</i>
-                                </label>
-                              </div>
-                            </td>
-                            <td>{{ l.locate_name }}</td>
-                            <td class="td-actions text-right">
-                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-success btn-simple btn-xs">
-                                <i class="material-icons">check_circle</i> ว่าง {{ l.locate_quantity }}
-                              </button>
-                              <button type="button" rel="tooltip" title="Remove" class="btn btn-primary btn-simple btn-xs">
-                                <i class="material-icons">info_outline</i> ทั้งหมด {{ l.locate_quantity }}
-                              </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
+                        <app-locate-table>
+                          <div class="loader">
+                            <svg class="circular" viewBox="25 25 50 50">
+                                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                            </svg>
+                          </div>
+                        </app-locate-table>
                       </div>
                       <div class="tab-pane" id="messages">
-                        <table class="table" *ngIf="rfid">
-                          <tbody>
-                          <tr *ngFor="let r of rfid | async">
-                            <td>
-                              <div class="checkbox">
-                                <label>
-                                  <!-- <input type="checkbox" name="optionsCheckboxes" checked> -->
-                                    <i class="material-icons" color="green">check_circle</i>
-                                </label>
-                              </div>
-                            </td>
-                            <td>{{ r.rfid_data }}</td>
-                            <td class="td-actions text-right">
-                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
-                                <i class="material-icons">edit</i>
-                              </button>
-                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                <i class="material-icons">close</i>
-                              </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
+                        <app-rfid-table>
+                          <div class="loader">
+                            <svg class="circular" viewBox="25 25 50 50">
+                                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                            </svg>
+                          </div>
+                        </app-rfid-table>
                       </div>
                     </div>
                   </div>

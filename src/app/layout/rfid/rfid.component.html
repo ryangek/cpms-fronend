@@ -1,0 +1,48 @@
+<div class="main-content">
+  <div class="container-fluid">
+
+    <div class="card">
+      <div class="card-header" data-background-color="red">
+        <h4 class="title">
+          <span class="material-icons">credit_card</span>&nbsp;ตารางข้อมูลบัตร&nbsp;
+          <button href="javascript:void(0)" (click)="changeData(10)" id="rfid" class="btn btn-sm btn-info">ทั้งหมด</button>
+          <button href="javascript:void(0)" (click)="changeData(0)" id="rfid-use" class="btn btn-sm btn-default">ถูกใช้แล้ว</button>
+          <button href="javascript:void(0)" (click)="changeData(1)" id="rfid-not" class="btn btn-sm btn-primary">ยังไม่ถูกใช้</button>
+        </h4>
+      </div>
+      <div class="card-content">
+        <table id="table" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+          <thead>
+          <tr>
+            <th></th>
+            <th>สถานะ</th>
+            <th>ข้อมูล</th>
+            <th>ผู้ใช้งาน</th>
+            <th>สร้างเมื่อ</th>
+            <th>แก้ไขล่าสุด</th>
+            <th>#</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let r of rfid_selected; let item = index;">
+            <td>{{item+1}}</td>
+            <td>
+              <b *ngIf="r.rfid_user != null">ถูกใช้งานอยู่</b>
+              <b *ngIf="r.rfid_user == null">ว่าง</b>
+            </td>
+            <td>{{ r.rfid_data }}</td>
+            <td>{{ r.rfid_user || '-' }}</td>
+            <td>{{ r.created_at }}</td>
+            <td>{{ r.updated_at }}</td>
+            <td>
+              <a style="color: red;" *ngIf="r.rfid_user==null" href="javascript:void(0)" (click)="OnDelete(r.rfid)"><i class="material-icons">delete_forever</i></a>
+              <a style="color: grey;" *ngIf="r.rfid_user!=null" href="javascript:void(0)"><i class="material-icons">block</i></a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
